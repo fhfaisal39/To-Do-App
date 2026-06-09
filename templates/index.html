@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taski — To-Do</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <div class="shell">
+
+    <!-- ── Sidebar ─────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">Taski</span>
+      </div>
+
+      <nav class="nav">
+        <a href="/?filter=all"       class="nav-item {% if filter == 'all' %}active{% endif %}">
+          <svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="2" rx="1"/><rect x="2" y="9" width="11" height="2" rx="1"/><rect x="2" y="14" width="14" height="2" rx="1"/></svg>
+          All tasks
+          <span class="badge">{{ stats.total }}</span>
+        </a>
+        <a href="/?filter=active"    class="nav-item {% if filter == 'active' %}active{% endif %}">
+          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke-width="2"/><path d="M10 6v4l3 2" stroke-width="2" stroke-linecap="round"/></svg>
+          Active
+          <span class="badge">{{ stats.active }}</span>
+        </a>
+        <a href="/?filter=completed" class="nav-item {% if filter == 'completed' %}active{% endif %}">
+          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke-width="2"/><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          Completed
+          <span class="badge">{{ stats.completed }}</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        {% if stats.completed > 0 %}
+        <form action="/clear-completed" method="post">
+          <button class="clear-btn" type="submit">Clear completed</button>
+        </form>
+        {% endif %}
+        <p class="docker-badge">🐳 Running in Docker</p>
+      </div>
+    </aside>
+
+    <!-- ── Main ────────────────────────────────────────── -->
+    <main class="main">
+
+      <header class="topbar">
+        <div>
+          <h1 class="page-title">
+            {% if filter == 'active' %}Active Tasks
+            {% elif filter == 'completed' %}Completed
+            {% else %}All Tasks{% endif %}
+          </h1>
+          <p class="page-sub">{{ stats.active }} task{{ 's' if stats.active != 1 else '' }} remaining</p>
+        </div>
+      </header>
+
+      <!-- Add form -->
+      <form class="add-form" action="/add" method="post">
+        <div class="add-input-wrap">
+          <svg class="add-icon" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke-width="2" stroke-linecap="round"/></svg>
+          <input
+            class="add-input"
+            type="text"
+            name="title"
+            placeholder="Add a new task…"
+            autocomplete="off"
+            required
+          />
+        </div>
+        <select class="priority-select" name="priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+        <button class="add-btn" type="submit">Add Task</button>
+      </form>
+
+      <!-- Task list -->
+      {% if tasks %}
+      <ul class="task-list">
+        {% for task in tasks %}
+        <li class="task-item {% if task.done %}done{% endif %}">
+          <form action="/toggle/{{ task.id }}" method="post" class="check-form">
+            <button class="check-btn {% if task.done %}checked{% endif %}" type="submit" title="Toggle complete">
+              {% if task.done %}
+              <svg viewBox="0 0 20 20"><path d="M4 10l4.5 4.5 7.5-8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              {% endif %}
+            </button>
+          </form>
+
+          <div class="task-body">
+            <span class="task-title">{{ task.title }}</span>
+            <span class="task-meta">
+              <span class="priority-pill p-{{ task.priority }}">{{ task.priority }}</span>
+              <span class="task-date">{{ task.created_at }}</span>
+            </span>
+          </div>
+
+          <form action="/delete/{{ task.id }}" method="post" class="del-form">
+            <button class="del-btn" type="submit" title="Delete task">
+              <svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+
+      {% else %}
+      <div class="empty-state">
+        <svg viewBox="0 0 80 80" class="empty-icon">
+          <rect x="15" y="10" width="50" height="60" rx="6" fill="none" stroke-width="2"/>
+          <path d="M25 30h30M25 42h20M25 54h24" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p class="empty-title">Nothing here</p>
+        <p class="empty-sub">Add a task above to get started.</p>
+      </div>
+      {% endif %}
+
+    </main>
+  </div>
+
+</body>
+</html>
