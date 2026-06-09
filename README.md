@@ -10,26 +10,26 @@ This project is developed as a DevOps/containerization lab implementation, focus
 
 Key Features:
 
-  Add, update, and delete tasks
-  Priority-based task management (Low / Medium / High)
-  Task filtering (All / Active / Completed)
-  Live task statistics
-  Simple Flask-based web interface
-  Fully containerized using Docker
-  Multi-stage Docker build for optimized image size
-  Docker Compose orchestration
+	Add, update, and delete tasks
+	Priority-based task management (Low / Medium / High)
+	Task filtering (All / Active / Completed)
+	Live task statistics
+	Simple Flask-based web interface
+	Fully containerized using Docker
+	Multi-stage Docker build for optimized image size
+	Docker Compose orchestration
 
 Tech Stack:
 
-  Python (Flask)
-  HTML, CSS
-  Docker
-  Docker Compose
+	Python (Flask)
+	HTML, CSS
+	Docker
+	Docker Compose
 
 Learning Outcomes:
 
-  Containerizing a web application using Docker
-  Writing multi-stage Dockerfiles
-  Using Docker Compose for service orchestration
-  Applying container security best practices
-  Understanding deployment workflow in modern DevOps
+	Containerizing a web application using Docker
+	Writing multi-stage Dockerfiles
+	Using Docker Compose for service orchestration
+	Applying container security best practices
+	Understanding deployment workflow in modern DevOps
